@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String           @id @default(uuid())
+  fullName        String
+  email           String           @unique
+  password        String
+  createdAt       DateTime         @default(now())
+  analyses        Analysis[]
+  businessProfile BusinessProfile?
+  knowledgeBases  KnowledgeBase[]
+}
+
+model BusinessProfile {
+  id                     String   @id @default(uuid())
+  userId                 String   @unique
+  companyName            String
+  companyDescription     String?
+  supportTone            String
+  refundPolicy           String?
+  deliveryPolicy         String?
+  businessHours          String?
+  faq                    String?
+  escalationInstructions String?
+  brandVoiceExamples     String?
+  restrictedPhrases      String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Analysis {
+  id                  String   @id @default(uuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  originalMessage     String
+  category            String
+  urgency             String
+  sentiment           String
+  summary             String   @db.Text
+  suggestedReply      String   @db.Text
+  recommendedAction   String   @db.Text
+  confidence          Int?
+  resolved            Boolean  @default(false)
+  responseTimeMinutes Int?
+  createdAt           DateTime @default(now())
+}
+
+model KnowledgeBase {
+  id          String            @id @default(uuid())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  snippets    DocumentSnippet[]
+  createdAt   DateTime          @default(now())
+}
+
+model DocumentSnippet {
+  id              String        @id @default(uuid())
+  knowledgeBaseId String
+  knowledgeBase   KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+  content         String        @db.Text
+  metadata        Json?
+  // vector field commented out until pgvector is confirmed
+  // embedding       Unsupported("vector")?
+  createdAt       DateTime      @default(now())
+}

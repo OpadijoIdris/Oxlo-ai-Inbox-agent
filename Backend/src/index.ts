@@ -5,6 +5,8 @@ import helmet from "helmet";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes.js";
 import analysisRoutes from "./routes/analysis.routes.js";
+import businessProfileRoutes from "./routes/businessProfile.routes.js";
+import analyticsRoutes from "./routes/analytics.routes.js";
 
 dotenv.config();
 
@@ -20,6 +22,8 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/analysis", analysisRoutes);
+app.use("/api/business-profile", businessProfileRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 // Health check
 app.get("/", (req, res) => {

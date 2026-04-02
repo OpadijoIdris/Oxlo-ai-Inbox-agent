@@ -2,6 +2,9 @@
 node_modules/
 .pnp
 .pnp.js
+dist/
+build/
+*.tsbuildinfo
 
 # Next.js (Frontend)
 Frontend/.next/
@@ -14,11 +17,7 @@ Frontend/out/
 .env.test.local
 .env.production.local
 Backend/.env
-
-# Build
-dist/
-build/
-*.tsbuildinfo
+Frontend/.env.local
 
 # Debug logs
 npm-debug.log*
@@ -30,7 +29,6 @@ yarn-error.log*
 Thumbs.db
 
 # Prisma (Backend)
-# Backend/prisma/migrations/ <--- ALLOWED
 Backend/prisma/dev.db
 Backend/prisma/dev.db-journal
 
@@ -39,3 +37,6 @@ Backend/prisma/dev.db-journal
 .idea/
 *.swp
 *.swo
+
+# Project Specific
+check_db.js

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, History, MessageSquarePlus, LogOut } from "lucide-react";
+import { LayoutDashboard, History, MessageSquarePlus, LogOut, BarChart, Settings } from "lucide-react";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -16,7 +16,9 @@ const Navbar = () => {
   const navLinks = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { label: "Analyze", href: "/analyze", icon: MessageSquarePlus },
+    { label: "Analytics", href: "/analytics", icon: BarChart },
     { label: "History", href: "/history", icon: History },
+    { label: "Settings", href: "/settings", icon: Settings },
   ];
 
   return (

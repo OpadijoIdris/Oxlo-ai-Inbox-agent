@@ -22,23 +22,28 @@ interface AnalysisResult {
   summary: string;
   suggestedReply: string;
   recommendedAction: string;
+  confidence: number;
 }
 
 export default function AnalyzePage() {
   const [message, setMessage] = useState("");
+  const [analyzedMessage, setAnalyzedMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState("");
 
   const handleAnalyze = async () => {
     if (!message.trim()) return;
+    const currentMessage = message;
     setLoading(true);
     setError("");
     setResult(null);
 
     try {
-      const response = await api.post("/analysis", { message });
+      const response = await api.post("/analysis", { message: currentMessage });
       setResult(response.data);
+      setAnalyzedMessage(currentMessage);
+      setMessage(""); // Clear input on success
     } catch (err: any) {
       setError(err.response?.data?.message || "Analysis failed. Please check your API credentials.");
     } finally {
@@ -48,37 +53,43 @@ export default function AnalyzePage() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert("Copied to clipboard!");
+    // Use a non-blocking toast or simple state if possible, but alert works for now
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-blue-500/30">
       <Navbar />
 
-      <main className="max-w-5xl mx-auto px-6 py-12">
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Message Analyzer</h1>
-          <p className="text-slate-600 mt-2 text-lg">Paste a customer query below to get instant AI-powered insights.</p>
+      <main className="max-w-5xl mx-auto px-6 py-12 pt-24">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-extrabold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+            AI Assistant Copilot
+          </h1>
+          <p className="text-slate-400 mt-2 text-lg italic">
+            Company-aware message analysis & response generation.
+          </p>
         </div>
 
-        <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 mb-10">
+        <div className="bg-white/[0.03] p-8 rounded-3xl border border-white/[0.08] backdrop-blur-xl mb-10 shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+          
           <textarea
-            className="w-full h-48 p-6 rounded-2xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-slate-800 resize-none placeholder:text-slate-400"
-            placeholder="Paste customer message here (e.g. 'I haven't received my order yet and I'm very frustrated...')"
+            className="w-full h-48 p-6 rounded-2xl bg-white/[0.05] border border-white/[0.1] focus:ring-2 focus:ring-blue-500/50 focus:border-transparent outline-none transition-all text-white resize-none placeholder:text-slate-600 relative z-10"
+            placeholder="Paste customer message here..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
           
-          <div className="mt-6 flex justify-end items-center space-x-4">
+          <div className="mt-6 flex justify-end items-center space-x-4 relative z-10">
             <button
               onClick={handleAnalyze}
               disabled={loading || !message.trim()}
-              className="flex items-center px-8 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl transition-all disabled:opacity-50 disabled:shadow-none space-x-2"
+              className="flex items-center px-8 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-500 transition-all disabled:opacity-50 space-x-2 shadow-[0_0_20px_rgba(37,99,235,0.3)]"
             >
               {loading ? (
                 <>
-                  <Sparkles className="animate-spin" size={20} />
-                  <span>Analyzing...</span>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Processing...</span>
                 </>
               ) : (
                 <>
@@ -91,7 +102,7 @@ export default function AnalyzePage() {
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl mb-10 flex items-center">
+          <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl mb-10 flex items-center">
             <AlertCircle className="mr-3" size={20} />
             <p className="text-sm font-medium">{error}</p>
           </div>
@@ -99,60 +110,92 @@ export default function AnalyzePage() {
 
         {result && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Stat Briefs */}
-              <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Category</p>
-                <div className="flex items-center text-blue-700 font-bold">
-                  <Info className="mr-2" size={16} /> {result.category}
+            {/* Locked Source Message Block */}
+            <div className="p-8 bg-white/[0.02] rounded-3xl border border-white/[0.05] border-l-4 border-l-blue-500/50">
+              <h4 className="text-[10px] font-bold text-slate-500 mb-3 flex items-center uppercase tracking-[0.2em] font-mono">
+                <MessageCircle className="mr-2 text-blue-500/60" size={14} /> Processed Customer Message
+              </h4>
+              <p className="text-slate-400 leading-relaxed text-sm italic">
+                &ldquo;{analyzedMessage}&rdquo;
+              </p>
+            </div>
+
+            {/* Confidence Warning */}
+            {result.confidence < 60 && (
+              <div className="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex items-center gap-3 text-amber-400 mb-6">
+                <AlertCircle size={20} className="shrink-0" />
+                <div className="text-sm">
+                  <span className="font-bold uppercase tracking-wider text-xs block mb-0.5 text-amber-500">Low Confidence Warning</span>
+                  This analysis has a confidence score of {result.confidence}%. Please review carefully before sending.
                 </div>
               </div>
-              <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Urgency</p>
-                <div className={`flex items-center font-bold ${
-                  result.urgency === 'High' ? 'text-red-600' : 'text-green-600'
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="p-5 bg-white/[0.03] rounded-2xl border border-white/[0.08]">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Category</p>
+                <div className="flex items-center text-blue-400 font-bold text-sm">
+                  <Info className="mr-2" size={14} /> {result.category}
+                </div>
+              </div>
+              <div className="p-5 bg-white/[0.03] rounded-2xl border border-white/[0.08]">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Urgency</p>
+                <div className={`flex items-center font-bold text-sm ${
+                  result.urgency === 'High' ? 'text-rose-400' : 'text-emerald-400'
                 }`}>
-                  <AlertCircle className="mr-2" size={16} /> {result.urgency}
+                  <AlertCircle className="mr-2" size={14} /> {result.urgency}
                 </div>
               </div>
-              <div className="p-6 bg-white rounded-2xl shadow-sm border border-slate-100">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Sentiment</p>
-                <div className="flex items-center text-indigo-600 font-bold">
-                  <Sparkles className="mr-2" size={16} /> {result.sentiment}
+              <div className="p-5 bg-white/[0.03] rounded-2xl border border-white/[0.08]">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Sentiment</p>
+                <div className="flex items-center text-indigo-400 font-bold text-sm">
+                  <Sparkles className="mr-2" size={14} /> {result.sentiment}
+                </div>
+              </div>
+              <div className="p-5 bg-white/[0.03] rounded-2xl border border-white/[0.08]">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Confidence</p>
+                <div className={`flex items-center font-bold text-sm ${
+                  result.confidence >= 80 ? 'text-emerald-400' : result.confidence >= 60 ? 'text-amber-400' : 'text-rose-400'
+                }`}>
+                  <CheckCircle2 className="mr-2" size={14} /> {result.confidence}%
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="p-8 bg-white rounded-3xl shadow-sm border border-slate-100">
-                <h4 className="text-lg font-bold text-slate-900 mb-4 flex items-center">
-                  <Info className="mr-2 text-blue-600" size={20} /> Summary
+              <div className="p-8 bg-white/[0.03] rounded-3xl border border-white/[0.08]">
+                <h4 className="text-sm font-bold text-slate-400 mb-4 flex items-center uppercase tracking-widest font-mono">
+                  <Info className="mr-2 text-blue-500" size={18} /> Summary
                 </h4>
-                <p className="text-slate-600 leading-relaxed">{result.summary}</p>
+                <p className="text-slate-300 leading-relaxed text-sm">{result.summary}</p>
               </div>
 
-              <div className="p-8 bg-white rounded-3xl shadow-sm border border-slate-100">
-                <h4 className="text-lg font-bold text-slate-900 mb-4 flex items-center">
-                  <CheckCircle2 className="mr-2 text-green-600" size={20} /> Recommended Action
+              <div className="p-8 bg-white/[0.03] rounded-3xl border border-white/[0.08]">
+                <h4 className="text-sm font-bold text-slate-400 mb-4 flex items-center uppercase tracking-widest font-mono">
+                  <CheckCircle2 className="mr-2 text-emerald-500" size={18} /> Recommended Action
                 </h4>
-                <p className="text-slate-600 leading-relaxed">{result.recommendedAction}</p>
+                <p className="text-slate-300 leading-relaxed text-sm">{result.recommendedAction}</p>
               </div>
             </div>
 
-            <div className="p-8 bg-blue-600 rounded-3xl shadow-xl">
-              <div className="flex justify-between items-center mb-6">
+            <div className="p-10 bg-gradient-to-br from-blue-700 to-indigo-800 rounded-3xl shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none group-hover:scale-110 transition-transform">
+                <MessageCircle size={150} />
+              </div>
+              
+              <div className="flex justify-between items-center mb-6 relative z-10">
                 <h4 className="text-lg font-bold text-white flex items-center">
                   <MessageCircle className="mr-2" size={20} /> Suggested Reply
                 </h4>
                 <button 
                   onClick={() => copyToClipboard(result.suggestedReply)}
-                  className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition"
+                  className="p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all active:scale-95"
                   title="Copy Reply"
                 >
-                  <Copy size={18} />
+                  <Copy size={20} />
                 </button>
               </div>
-              <div className="bg-white/10 rounded-2xl p-6 text-blue-50 leading-relaxed italic">
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-blue-50 leading-relaxed italic text-lg relative z-10 border border-white/10">
                 &ldquo;{result.suggestedReply}&rdquo;
               </div>
             </div>
