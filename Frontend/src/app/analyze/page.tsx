@@ -57,24 +57,24 @@ export default function AnalyzePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-blue-500/30">
+    <div className="min-h-screen bg-background text-foreground selection:bg-blue-500/30">
       <Navbar />
 
       <main className="max-w-5xl mx-auto px-6 py-12 pt-24">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-extrabold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             AI Assistant Copilot
           </h1>
-          <p className="text-slate-400 mt-2 text-lg italic">
+          <p className="text-foreground/60 mt-2 text-lg italic">
             Company-aware message analysis & response generation.
           </p>
         </div>
 
-        <div className="bg-white/[0.03] p-8 rounded-3xl border border-white/[0.08] backdrop-blur-xl mb-10 shadow-2xl relative overflow-hidden group">
+        <div className="bg-card p-8 rounded-3xl border border-border backdrop-blur-xl mb-10 shadow-2xl relative overflow-hidden group">
           <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
           
           <textarea
-            className="w-full h-48 p-6 rounded-2xl bg-white/[0.05] border border-white/[0.1] focus:ring-2 focus:ring-blue-500/50 focus:border-transparent outline-none transition-all text-white resize-none placeholder:text-slate-600 relative z-10"
+            className="w-full h-48 p-6 rounded-2xl bg-foreground/3 border border-border focus:ring-2 focus:ring-blue-500/50 focus:border-transparent outline-none transition-all text-foreground resize-none placeholder:text-foreground/30 relative z-10"
             placeholder="Paste customer message here..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -102,7 +102,7 @@ export default function AnalyzePage() {
         </div>
 
         {error && (
-          <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl mb-10 flex items-center">
+          <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-xl mb-10 flex items-center">
             <AlertCircle className="mr-3" size={20} />
             <p className="text-sm font-medium">{error}</p>
           </div>
@@ -111,18 +111,18 @@ export default function AnalyzePage() {
         {result && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Locked Source Message Block */}
-            <div className="p-8 bg-white/[0.02] rounded-3xl border border-white/[0.05] border-l-4 border-l-blue-500/50">
-              <h4 className="text-[10px] font-bold text-slate-500 mb-3 flex items-center uppercase tracking-[0.2em] font-mono">
+            <div className="p-8 bg-card rounded-3xl border border-border border-l-4 border-l-blue-500/50">
+              <h4 className="text-[10px] font-bold text-foreground/40 mb-3 flex items-center uppercase tracking-[0.2em] font-mono">
                 <MessageCircle className="mr-2 text-blue-500/60" size={14} /> Processed Customer Message
               </h4>
-              <p className="text-slate-400 leading-relaxed text-sm italic">
+              <p className="text-foreground/60 leading-relaxed text-sm italic">
                 &ldquo;{analyzedMessage}&rdquo;
               </p>
             </div>
 
             {/* Confidence Warning */}
             {result.confidence < 60 && (
-              <div className="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex items-center gap-3 text-amber-400 mb-6">
+              <div className="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex items-center gap-3 text-amber-600 dark:text-amber-400 mb-6">
                 <AlertCircle size={20} className="shrink-0" />
                 <div className="text-sm">
                   <span className="font-bold uppercase tracking-wider text-xs block mb-0.5 text-amber-500">Low Confidence Warning</span>
@@ -132,30 +132,30 @@ export default function AnalyzePage() {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="p-5 bg-white/[0.03] rounded-2xl border border-white/[0.08]">
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Category</p>
-                <div className="flex items-center text-blue-400 font-bold text-sm">
+              <div className="p-5 bg-card rounded-2xl border border-border">
+                <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest mb-1.5 font-mono">Category</p>
+                <div className="flex items-center text-blue-500 font-bold text-sm">
                   <Info className="mr-2" size={14} /> {result.category}
                 </div>
               </div>
-              <div className="p-5 bg-white/[0.03] rounded-2xl border border-white/[0.08]">
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Urgency</p>
+              <div className="p-5 bg-card rounded-2xl border border-border">
+                <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest mb-1.5 font-mono">Urgency</p>
                 <div className={`flex items-center font-bold text-sm ${
-                  result.urgency === 'High' ? 'text-rose-400' : 'text-emerald-400'
+                  result.urgency === 'High' ? 'text-rose-500' : 'text-emerald-500'
                 }`}>
                   <AlertCircle className="mr-2" size={14} /> {result.urgency}
                 </div>
               </div>
-              <div className="p-5 bg-white/[0.03] rounded-2xl border border-white/[0.08]">
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Sentiment</p>
-                <div className="flex items-center text-indigo-400 font-bold text-sm">
+              <div className="p-5 bg-card rounded-2xl border border-border">
+                <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest mb-1.5 font-mono">Sentiment</p>
+                <div className="flex items-center text-indigo-500 font-bold text-sm">
                   <Sparkles className="mr-2" size={14} /> {result.sentiment}
                 </div>
               </div>
-              <div className="p-5 bg-white/[0.03] rounded-2xl border border-white/[0.08]">
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Confidence</p>
+              <div className="p-5 bg-card rounded-2xl border border-border">
+                <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest mb-1.5 font-mono">Confidence</p>
                 <div className={`flex items-center font-bold text-sm ${
-                  result.confidence >= 80 ? 'text-emerald-400' : result.confidence >= 60 ? 'text-amber-400' : 'text-rose-400'
+                  result.confidence >= 80 ? 'text-emerald-500' : result.confidence >= 60 ? 'text-amber-500' : 'text-rose-500'
                 }`}>
                   <CheckCircle2 className="mr-2" size={14} /> {result.confidence}%
                 </div>
@@ -163,22 +163,22 @@ export default function AnalyzePage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="p-8 bg-white/[0.03] rounded-3xl border border-white/[0.08]">
-                <h4 className="text-sm font-bold text-slate-400 mb-4 flex items-center uppercase tracking-widest font-mono">
+              <div className="p-8 bg-card rounded-3xl border border-border">
+                <h4 className="text-sm font-bold text-foreground/40 mb-4 flex items-center uppercase tracking-widest font-mono">
                   <Info className="mr-2 text-blue-500" size={18} /> Summary
                 </h4>
-                <p className="text-slate-300 leading-relaxed text-sm">{result.summary}</p>
+                <p className="text-foreground/80 leading-relaxed text-sm">{result.summary}</p>
               </div>
 
-              <div className="p-8 bg-white/[0.03] rounded-3xl border border-white/[0.08]">
-                <h4 className="text-sm font-bold text-slate-400 mb-4 flex items-center uppercase tracking-widest font-mono">
+              <div className="p-8 bg-card rounded-3xl border border-border">
+                <h4 className="text-sm font-bold text-foreground/40 mb-4 flex items-center uppercase tracking-widest font-mono">
                   <CheckCircle2 className="mr-2 text-emerald-500" size={18} /> Recommended Action
                 </h4>
-                <p className="text-slate-300 leading-relaxed text-sm">{result.recommendedAction}</p>
+                <p className="text-foreground/80 leading-relaxed text-sm">{result.recommendedAction}</p>
               </div>
             </div>
 
-            <div className="p-10 bg-gradient-to-br from-blue-700 to-indigo-800 rounded-3xl shadow-2xl relative overflow-hidden group">
+            <div className="p-10 bg-linear-to-br from-blue-600 to-indigo-700 rounded-3xl shadow-2xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none group-hover:scale-110 transition-transform">
                 <MessageCircle size={150} />
               </div>
@@ -195,7 +195,7 @@ export default function AnalyzePage() {
                   <Copy size={20} />
                 </button>
               </div>
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-blue-50 leading-relaxed italic text-lg relative z-10 border border-white/10">
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-white leading-relaxed italic text-lg relative z-10 border border-white/10">
                 &ldquo;{result.suggestedReply}&rdquo;
               </div>
             </div>

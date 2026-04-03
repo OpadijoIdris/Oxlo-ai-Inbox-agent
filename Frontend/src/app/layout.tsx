@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   description: "AI-powered customer support message analyzer",
 };
 
+import { Providers } from "@/app/providers";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,12 +28,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+      <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-300">
+        <Providers>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </Providers>
       </body>
     </html>
   );

@@ -8,46 +8,18 @@ export class BusinessProfileService {
   }
 
   static async upsertProfile(userId: string, data: any) {
-    const { 
-      companyName, 
-      companyDescription, 
-      supportTone, 
-      refundPolicy, 
-      deliveryPolicy, 
-      businessHours, 
-      faq, 
-      escalationInstructions, 
-      brandVoiceExamples, 
-      restrictedPhrases 
-    } = data;
+    // Filter out undefined values to satisfy strict TypeScript 'exactOptionalPropertyTypes'
+    const profileData = Object.fromEntries(
+      Object.entries(data).filter(([_, v]) => v !== undefined)
+    );
 
     return prisma.businessProfile.upsert({
       where: { userId },
-      update: {
-        companyName,
-        companyDescription,
-        supportTone,
-        refundPolicy,
-        deliveryPolicy,
-        businessHours,
-        faq,
-        escalationInstructions,
-        brandVoiceExamples,
-        restrictedPhrases,
-      },
+      update: profileData,
       create: {
         userId,
-        companyName,
-        companyDescription,
-        supportTone,
-        refundPolicy,
-        deliveryPolicy,
-        businessHours,
-        faq,
-        escalationInstructions,
-        brandVoiceExamples,
-        restrictedPhrases,
-      },
+        ...profileData,
+      } as any, // Cast to any to handle the dynamic nature of profileData
     });
   }
 }

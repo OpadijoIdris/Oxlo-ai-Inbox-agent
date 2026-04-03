@@ -32,42 +32,44 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <div className="max-w-md w-full space-y-8 p-10 bg-white rounded-2xl shadow-xl border border-slate-100">
-        <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-slate-900">Welcome Back</h2>
-          <p className="mt-2 text-sm text-slate-600">
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground px-4 selection:bg-blue-500/30 transition-colors duration-300">
+      <div className="max-w-md w-full space-y-8 p-10 bg-card rounded-3xl shadow-2xl border border-border backdrop-blur-xl relative overflow-hidden group">
+        <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+        
+        <div className="text-center relative z-10">
+          <h2 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Welcome Back</h2>
+          <p className="mt-2 text-sm text-foreground/50">
             Sign in to your InboxPilot AI account
           </p>
         </div>
         
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+          <div className="bg-rose-500/10 border border-rose-500/20 text-rose-500 px-4 py-3 rounded-xl text-sm relative z-10">
             {error}
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6 relative z-10" onSubmit={handleSubmit}>
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-foreground/70 ml-1">Email Address</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                className="block w-full px-4 py-3 rounded-2xl bg-foreground/[0.03] border border-border focus:ring-2 focus:ring-blue-500/50 focus:border-transparent outline-none transition-all text-foreground placeholder:text-foreground/20"
                 placeholder="you@example.com"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-foreground/70 ml-1">Password</label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                className="block w-full px-4 py-3 rounded-2xl bg-foreground/[0.03] border border-border focus:ring-2 focus:ring-blue-500/50 focus:border-transparent outline-none transition-all text-foreground placeholder:text-foreground/20"
                 placeholder="••••••••"
               />
             </div>
@@ -76,15 +78,15 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all disabled:opacity-70"
+            className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-2xl shadow-lg shadow-blue-500/20 text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all disabled:opacity-50 active:scale-95"
           >
             {loading ? <Loader2 className="animate-spin" /> : "Sign In"}
           </button>
         </form>
 
-        <div className="text-center text-sm">
-          <span className="text-slate-600">Don&apos;t have an account? </span>
-          <Link href="/register" className="font-semibold text-blue-600 hover:text-blue-500">
+        <div className="text-center text-sm relative z-10">
+          <span className="text-foreground/50">Don&apos;t have an account? </span>
+          <Link href="/register" className="font-bold text-blue-500 hover:text-blue-400 underline-offset-4 hover:underline transition-all">
             Register here
           </Link>
         </div>
