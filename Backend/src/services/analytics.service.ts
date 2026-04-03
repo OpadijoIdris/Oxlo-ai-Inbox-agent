@@ -109,7 +109,7 @@ export class AnalyticsService {
       map[key] = (map[key] || 0) + 1;
     });
 
-    const result = [];
+    const result: any[] = [];
     for (const day of days) {
       for (let hour = 0; hour < 24; hour++) {
         result.push({
