@@ -146,22 +146,38 @@ npm run dev
 
 ---
 
-## 🔧 Production Build
+## 🔧 Production Build & Deployment
 
-### Build Backend
-```bash
-cd Backend
-npm install --production
-npm run build  # (if build script exists; otherwise use tsc)
-```
+### Backend Deployment
+1. **Prepare Environment**: Create a `.env` file in the `Backend/` directory (see [Environment Variables](#-environment-variables)).
+2. **Install Dependencies**: `npm install --production` (or `npm install` to include `devDependencies` for building).
+3. **Build TypeScript**:
+   ```bash
+   cd Backend
+   npm run build
+   ```
+4. **Database Migration**:
+   ```bash
+   npx prisma generate
+   npx prisma migrate deploy
+   ```
+5. **Start Server**:
+   ```bash
+   npm start
+   ```
 
-### Build Frontend
-```bash
-cd Frontend
-npm install --production
-npm run build
-npm run start
-```
+### Frontend Deployment
+1. **Prepare Environment**: Create a `.env.local` or `.env.production` file in the `Frontend/` directory with `NEXT_PUBLIC_API_BASE_URL`.
+2. **Install & Build**:
+   ```bash
+   cd Frontend
+   npm install
+   npm run build
+   ```
+3. **Start Next.js**:
+   ```bash
+   npm run start
+   ```
 
 ---
 

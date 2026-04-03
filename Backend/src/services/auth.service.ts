@@ -1,15 +1,10 @@
-import { PrismaClient, type User } from "@prisma/client/index.js";
-import { PrismaPg } from "@prisma/adapter-pg";
-import pg from "pg";
+import prisma from "../lib/prisma.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
 export class AuthService {
