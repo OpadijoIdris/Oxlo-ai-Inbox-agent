@@ -33,14 +33,11 @@ import {
 import api from "@/lib/api";
 import Navbar from "@/components/Navbar";
 
-import { useTheme } from "next-themes";
-
 const COLORS = ["#6366f1", "#818cf8", "#a78bfa", "#c084fc", "#e879f9"];
 
 const AnalyticsPage = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
-  const { theme } = useTheme();
 
   useEffect(() => {
     fetchAnalytics();
@@ -65,10 +62,10 @@ const AnalyticsPage = () => {
     );
   }
 
-  const chartTextColor = theme === "dark" ? "#94a3b8" : "#475569";
-  const gridColor = theme === "dark" ? "rgba(255,255,255,0.05)" : "rgba(15,23,42,0.05)";
-  const tooltipBg = theme === "dark" ? "#0f172a" : "#ffffff";
-  const tooltipBorder = theme === "dark" ? "rgba(255,255,255,0.1)" : "rgba(15,23,42,0.1)";
+  const chartTextColor = "#475569";
+  const gridColor = "rgba(15,23,42,0.05)";
+  const tooltipBg = "#ffffff";
+  const tooltipBorder = "rgba(15,23,42,0.1)";
 
   const sentimentIcon = (name: string) => {
     if (name.toLowerCase().includes("frust") || name.toLowerCase().includes("angry")) return <Frown className="text-rose-500" size={14} />;
@@ -146,7 +143,7 @@ const AnalyticsPage = () => {
               <div className="text-xs text-foreground/30 font-mono">LAST 30 DAYS</div>
             </div>
             <div className="h-[350px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={350} minWidth={300} minHeight={200}>
                 <AreaChart data={data.analysesPerDay}>
                   <defs>
                     <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
@@ -185,7 +182,7 @@ const AnalyticsPage = () => {
               <Users className="text-indigo-500" size={20} /> Common Issues
             </h3>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={300} minWidth={300} minHeight={200}>
                 <PieChart>
                   <Pie
                     data={data.categoryDistribution}
@@ -233,13 +230,13 @@ const AnalyticsPage = () => {
               <Smile className="text-amber-500" size={20} /> Customer Sentiment
             </h3>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={300} minWidth={300} minHeight={200}>
                 <BarChart data={data.sentimentDistribution}>
                   <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
                   <XAxis dataKey="name" stroke={chartTextColor} fontSize={10} tickLine={false} axisLine={false} />
                   <YAxis stroke={chartTextColor} fontSize={12} tickLine={false} axisLine={false} />
                   <Tooltip 
-                    cursor={{ fill: theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(15,23,42,0.05)' }}
+                    cursor={{ fill: 'rgba(15,23,42,0.05)' }}
                     contentStyle={{ backgroundColor: tooltipBg, border: `1px solid ${tooltipBorder}`, borderRadius: "12px", fontSize: "12px" }}
                   />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]}>
@@ -282,7 +279,7 @@ const AnalyticsPage = () => {
                         const cellData = data.hourlyHeatmap.find((h: any) => h.day === day && h.hour === hour);
                         const count = cellData?.count || 0;
                         const opacity = Math.min(0.2 + (count * 0.2), 1);
-                        const baseOpacity = theme === 'dark' ? 0.05 : 0.1;
+                        const baseOpacity = 0.1;
                         
                         return (
                           <div 

@@ -1,6 +1,5 @@
 "use client";
 
-import ThemeToggle from "./ThemeToggle";
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, MessageSquarePlus, BarChart, History, Settings, LogOut } from "lucide-react";
 import Link from "next/link";
@@ -48,8 +47,6 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center space-x-4">
-        <ThemeToggle />
-        <div className="w-px h-6 bg-nav-border hidden sm:block" />
         <button
           onClick={handleLogout}
           className="flex items-center space-x-2 text-sm font-medium text-foreground/70 hover:text-red-500 transition-colors"
