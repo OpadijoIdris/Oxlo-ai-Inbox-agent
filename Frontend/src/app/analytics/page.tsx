@@ -62,10 +62,10 @@ const AnalyticsPage = () => {
     );
   }
 
-  const chartTextColor = "#475569";
-  const gridColor = "rgba(15,23,42,0.05)";
-  const tooltipBg = "#ffffff";
-  const tooltipBorder = "rgba(15,23,42,0.1)";
+  const chartTextColor = "#94a3b8";
+  const gridColor = "rgba(255,255,255,0.05)";
+  const tooltipBg = "#0f172a";
+  const tooltipBorder = "rgba(255,255,255,0.1)";
 
   const sentimentIcon = (name: string) => {
     if (name.toLowerCase().includes("frust") || name.toLowerCase().includes("angry")) return <Frown className="text-rose-500" size={14} />;
@@ -236,7 +236,7 @@ const AnalyticsPage = () => {
                   <XAxis dataKey="name" stroke={chartTextColor} fontSize={10} tickLine={false} axisLine={false} />
                   <YAxis stroke={chartTextColor} fontSize={12} tickLine={false} axisLine={false} />
                   <Tooltip 
-                    cursor={{ fill: 'rgba(15,23,42,0.05)' }}
+                    cursor={{ fill: 'rgba(255,255,255,0.05)' }}
                     contentStyle={{ backgroundColor: tooltipBg, border: `1px solid ${tooltipBorder}`, borderRadius: "12px", fontSize: "12px" }}
                   />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]}>
@@ -279,7 +279,7 @@ const AnalyticsPage = () => {
                         const cellData = data.hourlyHeatmap.find((h: any) => h.day === day && h.hour === hour);
                         const count = cellData?.count || 0;
                         const opacity = Math.min(0.2 + (count * 0.2), 1);
-                        const baseOpacity = 0.1;
+                        const baseOpacity = 0.05;
                         
                         return (
                           <div 
