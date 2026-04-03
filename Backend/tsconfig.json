@@ -35,7 +35,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "moduleResolution": "nodenext",
-    "types": ["node", "express", "cors", "morgan", "jsonwebtoken", "bcryptjs"],
     "esModuleInterop": true
   },
   "include": ["src/**/*", "prisma.config.ts"],
